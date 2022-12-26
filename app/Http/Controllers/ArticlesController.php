@@ -56,4 +56,11 @@ class ArticlesController extends Controller
         $article->update($content);
         return redirect()->route('root')->with('notice', 'update article success');
     }
+
+    public function destroy($id)
+    {
+        $article = auth()->user()->articles()->find($id);
+        $article->delete($id);
+        return redirect()->route('root')->with('notice', 'article deleted');
+    }
 }
