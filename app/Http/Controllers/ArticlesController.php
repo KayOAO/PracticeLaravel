@@ -11,7 +11,7 @@ class ArticlesController extends Controller
 
     public function __construct()
     {
-        $this->middleware('auth')->except('index');
+        $this->middleware('auth')->except('index', 'show');
         $this->rules = [
             'title' => 'required',
             'content' => 'required|min:5',
@@ -22,6 +22,12 @@ class ArticlesController extends Controller
     {
         $articles = Article::orderBy('created_at', 'desc')->paginate(3);
         return view('articles.index', ['articles' => $articles]);
+    }
+
+    public function show($id)
+    {
+        $article = Article::find($id);
+        return view('articles.show', ['article' => $article]);
     }
 
     public function create()
