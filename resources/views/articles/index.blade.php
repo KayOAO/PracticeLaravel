@@ -7,6 +7,8 @@
         <div class="border-t border-gray-300 my-1 p-2">
             <h3 class="font-bold text-lg">{{ $article->title }}</h3>
             <p>{{ $article->created_at }} 由 {{ $article->user->name }} 發表 </p>
+            <a href="{{ route('articles.edit', $article) }}">編輯</a>
         </div>
     @endforeach
+    {{ $articles->links() }}
 @endsection

@@ -21,14 +21,17 @@
             @endauth
         </div>
     @endif
-    <h1 class="m-4 font-thin text-4xl">@yield('pageTitle')</h1>
+    <div class="m-4">
+        <h1 class="font-thin text-4xl">@yield('pageTitle')</h1>
+        <a href="{{ route('root') }}">回首頁</a>
+    </div>
 </head>
 
 <body>
 
     <main class="m-4">
         @if (session()->has('notice'))
-            <div class="bg-ping-300 px-3 py-2 rounded">
+            <div class="bg-pink-300 px-3 py-2 rounded">
                 {{ session()->get('notice') }}
             </div>
         @endif
