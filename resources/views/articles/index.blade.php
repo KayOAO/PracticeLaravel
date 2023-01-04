@@ -1,4 +1,4 @@
-@extends('layouts.article')
+@extends('layouts.homepage')
 
 @section('pageTitle', '列表頁')
 @section('main')
