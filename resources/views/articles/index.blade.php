@@ -6,7 +6,7 @@
     <hr>
     <div class="page-container">
         <div class="page-content">
-            @foreach ($articles as $article)
+            @forelse ($articles as $article)
                 <div class="card">
                     <div class="card-header">
                         <h5 class="card-title">{{ $article->title }}</h5>
@@ -14,14 +14,15 @@
                             <span class="px-2">-</span>
                             <a href="#" class="text-muted">32 Comments</a>
                             <span class="px-2">-</span>
-                            <a href="#" class="text-dark small text-muted">By  {{ $article->user->name }}</a>
+                            <a href="{{ route('articles.index', ['author' => $article->user->id]) }}"
+                                class="text-dark small text-muted">By {{ $article->user->name }}</a>
                         </small>
                     </div>
                     <div class="card-body">
-                        <div class="blog-media">
+                        {{-- <div class="blog-media">
                             <img src="assets/imgs/blog-6.jpg" alt="" class="w-100">
                             <a href="#" class="badge badge-primary">#Salupt</a>
-                        </div>
+                        </div> --}}
                         <p class="my-3">{{ $article->content }}</p>
                     </div>
 
@@ -31,9 +32,12 @@
                         </a>
                     </div>
                 </div>
-            @endforeach
-            {{-- {{ $articles->links() }} --}}
-            <button class="btn btn-primary btn-block my-4">Load More Posts</button>
+
+                {{-- {{ $articles->links() }} --}}
+                <button class="btn btn-primary btn-block my-4">Load More Posts</button>
+            @empty
+                <p>No relevant articles yet.</p>
+            @endforelse
         </div>
 
         <!-- Sidebar -->
@@ -51,19 +55,13 @@
                 incidunt nesciunt dolorem reiciendis iusto.</p>
 
             <h6 class="sidebar-title mt-5 mb-4">Tags</h6>
-            <a href="javascript:void(0)" class="badge badge-pill badge-primary">#iusto</a>
-            <a href="javascript:void(0)" class="badge badge-pill badge-primary">#quibusdam</a>
-            <a href="javascript:void(0)" class="badge badge-pill badge-primary">#officia</a>
-            <a href="javascript:void(0)" class="badge badge-pill badge-primary">#animi</a>
-            <a href="javascript:void(0)" class="badge badge-pill badge-primary">#mollitia</a>
-            <a href="javascript:void(0)" class="badge badge-pill badge-primary">#quod</a>
-            <a href="javascript:void(0)" class="badge badge-pill badge-primary">#ipsa at</a>
-            <a href="javascript:void(0)" class="badge badge-pill badge-primary">#dolor</a>
-            <a href="javascript:void(0)" class="badge badge-pill badge-primary">#incidunt</a>
-            <a href="javascript:void(0)" class="badge badge-pill badge-primary">#possimus</a>
+            @foreach ($tags as $tag)
+                <a href="{{ route('articles.index', ['tag' => $tag->name]) }}"
+                    class="badge badge-pill badge-primary">{{ $tag->name }}</a>
+            @endforeach
 
-    </div>
-    {{-- <a href="{{ route('articles.create') }}">新增文章</a>
+        </div>
+        {{-- <a href="{{ route('articles.create') }}">新增文章</a>
     @foreach ($articles as $article)
         <div class="border-t border-gray-300 my-1 p-2">
             <h3 class="font-bold text-lg">
@@ -82,4 +80,4 @@
         </div>
     @endforeach
     {{ $articles->links() }} --}}
-@endsection
+    @endsection

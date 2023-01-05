@@ -34,7 +34,7 @@
                     @if (Route::has('login'))
                         @auth
                             <li class="nav-item">
-                                <a class="nav-link" href="no-sidebar.html">
+                                <a class="nav-link" href="{{ route('articles.index', ['author' => Auth::user()->id]) }}">
                                     <i class="ti-book"></i>
                                     My Articles
                                 </a>
@@ -112,4 +112,5 @@
     <script src="{{ route('root') }}/assets/js/joeblog.js"></script>
 
 </body>
+
 </html>

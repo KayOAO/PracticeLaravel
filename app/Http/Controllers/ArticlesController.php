@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Tag;
 use App\Models\Article;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
@@ -12,16 +13,31 @@ class ArticlesController extends Controller
     public function __construct()
     {
         $this->middleware('auth')->except('index', 'show');
-        $this->rules = [
-            'title' => 'required',
-            'content' => 'required|min:5',
-        ];
+    }
+
+    protected function validateArticle()
+    {
+        return request()->validate(
+            [
+                'title' => 'required',
+                'content' => 'required|min:5',
+                'tags' => 'exists:tags,id'
+            ]
+        );
     }
 
     public function index()
     {
-        $articles = Article::with('user')->orderBy('created_at', 'desc')->paginate(3);
-        return view('articles.index', ['articles' => $articles]);
+        if (request('tag')) {
+            $articles = Tag::where('name', request('tag'))->firstOrFail()->articles;
+        } elseif (request('author')) {
+            $articles = Article::with('user')->where('user_id', request('author'))->orderBy('created_at', 'desc')->paginate(3);
+        } else {
+            $articles = Article::with('user')->orderBy('created_at', 'desc')->paginate(3);
+        }
+
+        $tags = Tag::all();
+        return view('articles.index', ['articles' => $articles, 'tags' => $tags]);
     }
 
     public function show($id)
@@ -32,14 +48,18 @@ class ArticlesController extends Controller
 
     public function create()
     {
-        return view('articles.create');
+        $tags = Tag::all();
+        return view('articles.create', ['tags' => $tags]);
     }
 
     public function store(Request $request)
     {
-        $content = $request->validate($this->rules);
+        $content = $this->validateArticle();
+        $article = auth()->user()->articles()->create($content);
+        if (request('tags')) {
+            $article->tags()->attach(request('tags'));
+        }
 
-        auth()->user()->articles()->create($content);
         return redirect()->route('root')->with('notice', 'add article success');
     }
 
@@ -52,7 +72,7 @@ class ArticlesController extends Controller
     public function update(Request $request, $id)
     {
         $article = auth()->user()->articles()->find($id);
-        $content = $request->validate($this->rules);
+        $content = $this->validateArticle();
         $article->update($content);
         return redirect()->route('root')->with('notice', 'update article success');
     }

@@ -7,7 +7,9 @@
         <div class="errors p-3 bg-red-500 text-red-100 font-thin rounded">
             <ul>
                 @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
+                    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                        <li>{{ $error }}</li>
+                    </div>
                 @endforeach
             </ul>
         </div>
@@ -21,11 +23,25 @@
                 <label>標題</label>
                 <input type="text" name="title" value="{{ old('title') }}" class="form-control">
             </div>
+
             <div class="col-12 form-group">
                 <label>內文</label>
-                <textarea name="content" cols="30" rows="10" class="form-control">
-                    {{ old('content') }}
-                </textarea>
+                <textarea name="content" cols="30" rows="10" class="form-control">{{ old('content') }}</textarea>
+
+                {{-- @error('content')
+                    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                        {{ $errors->first('content') }}
+                    </div>
+                @enderror --}}
+            </div>
+
+            <div class="col-sm-12 form-group">
+                <label>Tags</label>
+                <select name='tags[]' multiple class="form-control" >
+                    @foreach ($tags as $tag)
+                        <option value="{{ $tag->id }}">{{ $tag->name }}</option>
+                    @endforeach
+                </select>
             </div>
 
             <div class="form-group col-12">
