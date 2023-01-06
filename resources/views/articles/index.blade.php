@@ -32,12 +32,14 @@
                         </a>
                     </div>
                 </div>
-
-                {{-- {{ $articles->links() }} --}}
-                <button class="btn btn-primary btn-block my-4">Load More Posts</button>
+                <hr>
             @empty
                 <p>No relevant articles yet.</p>
             @endforelse
+
+            @if (count($articles) > 0)
+                {{ $articles->links() }}
+            @endif
         </div>
 
         <!-- Sidebar -->

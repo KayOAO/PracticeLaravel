@@ -29,7 +29,7 @@ class ArticlesController extends Controller
     public function index()
     {
         if (request('tag')) {
-            $articles = Tag::where('name', request('tag'))->firstOrFail()->articles;
+            $articles = Tag::where('name', request('tag'))->firstOrFail()->articles()->orderBy('created_at', 'desc')->paginate(3);
         } elseif (request('author')) {
             $articles = Article::with('user')->where('user_id', request('author'))->orderBy('created_at', 'desc')->paginate(3);
         } else {
