@@ -8,15 +8,33 @@
         <div class="page-content">
             @forelse ($articles as $article)
                 <div class="card">
-                    <div class="card-header">
-                        <h5 class="card-title">{{ $article->title }}</h5>
-                        <small class="small text-muted">{{ $article->created_at->format('Y/m/d') }}
-                            <span class="px-2">-</span>
-                            <a href="#" class="text-muted">32 Comments</a>
-                            <span class="px-2">-</span>
-                            <a href="{{ route('articles.index', ['author' => $article->user->id]) }}"
-                                class="text-dark small text-muted">By {{ $article->user->name }}</a>
-                        </small>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h5 class="card-title">{{ $article->title }}</h5>
+                            <small class="small text-muted">{{ $article->created_at->format('Y/m/d') }}
+                                <span class="px-2">-</span>
+                                <a href="#" class="text-muted">32 Comments</a>
+                                <span class="px-2">-</span>
+                                <a href="{{ route('articles.index', ['author' => $article->user->id]) }}"
+                                    class="text-dark small text-muted">By {{ $article->user->name }}</a>
+                            </small>
+                        </div>
+
+                        @auth
+                            @if (Auth::user()->id == $article->user->id)
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <a class="text-dark small mr-3"
+                                        href="{{ route('articles.edit', $article) }}"><u>Edit</u></a>
+                                    <form id="delArticle" method="POST" action="{{ route('articles.destroy', $article) }}">
+                                        @csrf
+                                        @method('delete')
+                                        <a class="text-dark small"
+                                            onclick="document.getElementById('delArticle').submit();"><u>Delete</u></a>
+                                    </form>
+                                </div>
+                            @endif
+                        @endauth
+
                     </div>
                     <div class="card-body">
                         {{-- <div class="blog-media">

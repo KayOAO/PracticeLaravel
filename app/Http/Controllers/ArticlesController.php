@@ -66,19 +66,27 @@ class ArticlesController extends Controller
     public function edit($id)
     {
         $article = auth()->user()->articles()->find($id);
-        return view('articles.edit', ['article' => $article]);
+        $tags = Tag::all();
+        return view('articles.edit', ['article' => $article, 'tags' => $tags]);
     }
 
     public function update(Request $request, $id)
     {
         $article = auth()->user()->articles()->find($id);
         $content = $this->validateArticle();
+        dd($content);
         $article->update($content);
         return redirect()->route('root')->with('notice', 'update article success');
     }
 
     public function destroy($id)
     {
+        // echo url()->previous();
+        // dd(request());
+        // $route = 'root';
+        // if (strpos(url()->previous(), '?')) {
+        //     $route = '/articles' . explode('?', url()->previous())[1];
+        // }
         $article = auth()->user()->articles()->find($id);
         $article->delete($id);
         return redirect()->route('root')->with('notice', 'article deleted');

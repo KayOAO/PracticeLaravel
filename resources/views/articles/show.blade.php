@@ -6,20 +6,39 @@
         <div class="page-container">
             <div class="page-content">
                 <div class="card">
-                    <div class="card-header pt-0">
-                        <h3 class="card-title mb-4">{{ $article->title }}</h3>
-                        <div class="blog-media mb-4">
+                    <div class="card-header pt-0 d-flex justify-content-between align-items-center">
+                        <div>
+                            <h3 class="card-title">{{ $article->title }}</h3>
+                            {{-- <div class="blog-media mb-4">
                             <img src="{{ route('root') }}/assets/imgs/blog-6.jpg" alt="" class="w-100">
                             <a href="#" class="badge badge-primary">#Salupt</a>
+                        </div> --}}
+                            <small class="small text-muted">
+                                <a href="{{ route('articles.index', ['author' => $article->user->name]) }}"
+                                    class="text-muted">By <u>{{ $article->user->name }}</u></a>
+                                <span class="px-2">·</span>
+                                <span>{{ $article->created_at->format('Y/m/d') }}</span>
+                                <span class="px-2">·</span>
+                                <a href="#" class="text-muted">32 Comments</a>
+                            </small>
                         </div>
-                        <small class="small text-muted">
-                            <a href="{{ route('articles.index', ['author' => $article->user->name]) }}"
-                                class="text-muted">By : {{ $article->user->name }}</a>
-                            <span class="px-2">·</span>
-                            <span>{{ $article->created_at->format('Y/m/d') }}</span>
-                            <span class="px-2">·</span>
-                            <a href="#" class="text-muted">32 Comments</a>
-                        </small>
+
+                        @auth
+                            @if (Auth::user()->id == $article->user->id)
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <a class="text-dark small mr-3"
+                                        href="{{ route('articles.edit', $article) }}"><u>Edit</u></a>
+                                    <form id="delArticle" method="POST" action="{{ route('articles.destroy', $article) }}">
+                                        @csrf
+                                        @method('delete')
+                                        <a class="text-dark small"
+                                            onclick="document.getElementById('delArticle').submit();"><u>Delete</u></a>
+                                    </form>
+                                </div>
+                            @endif
+                        @endauth
+
+
                     </div>
                     <div class="card-body border-top">
                         <p class="my-3">{{ $article->content }}</p>
